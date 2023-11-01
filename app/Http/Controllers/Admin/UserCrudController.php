@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\UserRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Validation\Rule;
 
 /**
  * Class UserCrudController
@@ -72,6 +73,19 @@ class UserCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
+        $this->crud->addField('username');
+        $this->crud->addField('name');
+        $this->crud->addField('is_blocked');
+
+        $userId = request()->route('id');
+
+        $this->crud->setValidation([
+            'username' => [
+                'required',
+                'regex:/^[A-Za-z]+$/',
+                Rule::unique('users')->ignore($userId)
+            ],
+            'name' => 'nullable|string',
+        ]);
     }
 }

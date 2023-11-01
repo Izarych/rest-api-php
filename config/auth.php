@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'header' => [
+            'driver' => 'header_id_guard',
+            'provider' => 'user_header'
+        ]
     ],
 
     /*
@@ -64,6 +68,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        'user_header' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\User::class
+        ]
 
         // 'users' => [
         //     'driver' => 'database',

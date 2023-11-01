@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['check_user_id_header'])->group(function () {
     Route::group(['prefix' => '/user', 'as' => 'user.'], function() {
-        Route::get('/', [UserController::class, 'getAuthenticatedUserInfo'])->name('user.info');
-        Route::patch('/', [UserController::class, 'updateUser'])->name('user.update');
-        Route::post('/', [UserController::class, 'register'])->name('user.create')->withoutMiddleware('check_user_id_header');
-        Route::delete('/', [UserController::class, 'deleteUser'])->name('user.delete');
+        Route::get('/', [UserController::class, 'index'])->name('user.index');
+        Route::patch('/', [UserController::class, 'update'])->name('user.update');
+        Route::post('/', [UserController::class, 'create'])->name('user.create');
+        Route::delete('/', [UserController::class, 'destroy'])->name('user.delete');
     });
 });

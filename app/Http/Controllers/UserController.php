@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function register(UserRequest $request): JsonResponse
+    public function create(UserRequest $request): JsonResponse
     {
         $request->validateEmail = true;
         $user = new User();
@@ -25,11 +25,9 @@ class UserController extends Controller
         ],201);
     }
 
-    public function getAuthenticatedUserInfo(Request $request) : JsonResponse
+    public function index(Request $request) : JsonResponse
     {
-        $userId = $request->header('User-Id');
-
-        $user = User::find($userId);
+        $user = auth()->guard('header')->user();
 
         if ($user->is_blocked) {
             return response()->json([
@@ -54,12 +52,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function updateUser(UserRequest $request) : JsonResponse
+    public function update(UserRequest $request) : JsonResponse
     {
-        // Проверка userId в Middleware - CheckUserIdHeader
-        $userId = $request->header('User-Id');
-
-        $user = User::find($userId);
+        $user = auth()->guard('header')->user();
 
         if ($user->is_blocked) {
             return response()->json([
@@ -75,7 +70,6 @@ class UserController extends Controller
             ], 404);
         }
 
-        // update only username and name fields
         $user->fill($request->only(['username', 'name']));
 
         $user->save();
@@ -86,17 +80,22 @@ class UserController extends Controller
         ]);
     }
 
-    public function deleteUser(Request $request) : JsonResponse
+    public function destroy(Request $request) : JsonResponse
     {
-        $userId = $request->header('User-Id');
-
-        $user = User::find($userId);
+        $user = auth()->guard('header')->user();
 
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'User is not found'
             ], 404);
+        }
+
+        if ($user->is_blocked) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is blocked'
+            ],406);
         }
 
         $user->delete();

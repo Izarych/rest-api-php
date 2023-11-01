@@ -20,14 +20,9 @@ class UserRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array|string>
      */
-    // В запросах где нужно валидировать почту - ставим validateEmail = true;
     public bool $validateEmail = false;
     public function rules(): array
     {
-        // validator rules
-        // email - required/unique
-        // username - required/only latin letters
-        // name - non - required/string
         $rules = [
             'username' => 'required|regex:/^[A-Za-z]+$/|unique:users',
             'name' => 'nullable|string',
