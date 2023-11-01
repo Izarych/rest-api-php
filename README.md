@@ -30,10 +30,11 @@ php artisan backpack:install
 php artisan serve
 ```
 
-Сервер доступен по http://localhost:8000
+Сервер доступен по http://localhost:8000.
 Админка по http://localhost:8000/admin
 В случае каких-либо проблем пробуем:
 ```shell
 php artisan config:cache
 php artisan optimize
+Также проверяем чтобы в config/backpack/base.php стояла такая модель 'user_model_fqn' => App\Models\AdminUser::class
 ```
